@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>RFS Terminal Server 16  Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+</head>
+<body onload="" onunload="" id="mainbody">
+	<iframe src="<%=url("xunfeng", "tophtm")%>" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="<%=url("xunfeng", "lefthtm")%>" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>System Information</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabopen.gif" alt="Tab Open">
+										<h3 class="tab-selected">General</h3>
+									</div>
+									<div class="tab-content-body">
+										<form method="GET" action="system information" name="general_sysinfo_form" class="form-content">
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td class="field-label">Model:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value">RFS Terminal Server 16  Configuration and Management</td>
+													</tr>
+													<tr>
+														<td class="field-label">Ethernet1&nbsp;MAC Address:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("ifconfig | grep br-lan | awk '{print $5}'")%></td>
+													</tr>
+													<tr>
+														<td class="field-label">Ethernet2&nbsp;MAC Address:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td colspan="3">&nbsp;</td>
+													</tr>
+													<tr>
+														<td class="field-label">Firmware Version:</td>
+														<td class="field-spacing">&nbsp;</td>
+												<td class="field-value" id="buildcopyright"></td>
+													</tr>
+													<tr>
+														<td class="field-label">Product VPD Version:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">Product ID:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">Hardware Strapping:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td colspan="3">&nbsp;</td>
+													</tr>
+													<tr>
+														<td class="field-label">CPU Utilization:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("top -n1 | grep -m 1 CPU | awk '{print $2}'")%></td>
+													</tr>
+													<tr>
+														<td class="field-label">Up Time:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("uptime | awk '{sub(/:/, \" hour \", $3);sub(/,/, \"\", $3);print $3 OFS \"min\"}'")%></td>
+													</tr>
+                                                    <tr>
+                                                        <td class="field-label">Interrupt:</td>
+                                                        <td class="field-spacing">&nbsp;</td>
+                                                        <td class="field-value"><%=luci.sys.exec("cat /proc/stat | grep intr | awk '{print $2}'")%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="field-label">Count/Second:</td>
+                                                        <td class="field-spacing">&nbsp;</td>
+                                                        <td class="field-value"><%=luci.sys.exec("vmstat | awk '/cs/ {getline; getline; print $12}'")%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="field-label">User Time:</td>
+                                                        <td class="field-spacing">&nbsp;</td>
+                                                        <td class="field-value"><%=luci.sys.exec("vmstat | awk '/cs/ {getline; getline; print $13}'")%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="field-label">System Time:</td>
+                                                        <td class="field-spacing">&nbsp;</td>
+                                                        <td class="field-value"><%=luci.sys.exec("vmstat | awk '/cs/ {getline; getline; print $14}'")%></td>
+                                                    </tr>
+													<tr>
+														<td colspan="3">&nbsp;</td>
+													</tr>
+													<tr>
+														<td class="field-label">MemTotal:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w MemTotal | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">MemFree:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w MemFree | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">MemAvailable:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w MemAvailable | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">Buffers:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w Buffers | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+                                                    <tr>
+                                                        <td class="field-label">Swapd:</td>
+                                                        <td class="field-spacing">&nbsp;</td>
+                                                        <td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w SwapCached | awk '{ print $2 OFS $3}'") %></td>
+                                                    </tr>
+													<tr>
+														<td class="field-label">Cached:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w Cached | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">SwapCached:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w SwapCached | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">HighTotal:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">HighFree:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">LowTotal:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">LowFree:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"></td>
+													</tr>
+													<tr>
+														<td class="field-label">SwapTotal:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w SwapTotal | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">SwapFree:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w SwapFree | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													<tr>
+														<td class="field-label">Slab:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-value"><%=luci.sys.exec("cat /proc/meminfo | grep -w Slab | awk '{ print $2 OFS $3}'") %></td>
+													</tr>
+													
+												</tbody>
+											</table>
+											<div class="form-buttons">
+												<div class="standard-custom">
+													<input type="SUBMIT" name="btRefresh" value="Refresh">
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabclose.gif" alt="Tab Close">
+										<h3>
+											<a target="_parent"> Network Information</a>
+										</h3>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="<%=url("xunfeng", "bottomhtm")%>" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>

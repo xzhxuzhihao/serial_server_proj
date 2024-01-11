@@ -1,0 +1,1124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>RFS Terminal Server 16 Configuration and Management</title>
+    <link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+    <script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+    <script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+    <script src="<%=media%>/xunfeng_base_files/jquery.min.js"></script>
+    <script src="<%=media%>/xunfeng_base_files/layer.js"></script>
+    <link rel="stylesheet" href="<%=media%>/xunfeng_base_files/layer.css" id="layuicss-layer">
+
+    <style>
+        .disconnectbtn {
+            color: #0099ff;
+            cursor: pointer;
+        }
+
+        .disconnectbtn:hover {
+            color: #0066dd;
+        }
+
+        select {
+            border: none;
+            border-bottom: 1px dotted #999999;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+
+        var index = 0;
+        function initPage() {
+        }
+        var err = new ErrorHandler();
+        function doValidate() {
+            err.clearErrors(); // reset
+            err.showError();
+            return !err.hasError();
+        }
+        function disconnect(usbnumber) {
+            if (confirm("Are you sure disconnect the device?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+        }
+        function copyto(fromindex, maxport) {
+            let htmlstr = "<ul style='width:100%;padding:0 0;list-style:none;'>";
+            for (let i = 0; i < maxport; i++) {
+                if (i + 1 != fromindex) {
+                    htmlstr += "<li style='width:24%;float:left;'><input type='checkbox' id='checkbox" + i + "' name ='checkbox" + i + "' data-idx='" + (i + 1) + "'>Port " + (i + 1) + "&nbsp;</li>";
+                }
+            }
+            htmlstr += "</ul>";
+            layer.confirm(htmlstr, {
+                btn: ['Copy', 'Cancel'] //按钮
+            }, function () {
+                let selectedid = [];
+                let index = 0;
+                $("input:checked").each(function () {
+                    selectedid[index++] = $(this).attr("data-idx");
+                })
+                dealcopy(fromindex, selectedid);
+                layer.closeAll('dialog');
+            }, function () {
+
+            });
+        }
+        function dealcopy(fromindex, selectedid) {
+            for (let i = 0; i < selectedid.length; i++) {
+                $("#speed" + selectedid[i]).val($("#speed" + fromindex).val());
+                $("#databit" + selectedid[i]).val($("#databit" + fromindex).val());
+                $("#stopbit" + selectedid[i]).val($("#stopbit" + fromindex).val());
+                $("#parity" + selectedid[i]).val($("#parity" + fromindex).val());
+                $("#flowcontrol" + selectedid[i]).val($("#flowcontrol" + fromindex).val());
+                $("#portmode" + selectedid[i]).val($("#portmode" + fromindex).val());
+            }
+        }
+    </script>
+
+</head>
+
+<body onload="" onunload="" id="mainbody">
+    <iframe src="/cgi-bin/luci/xunfeng/tophtm" width="100%" height="82" frameborder="0" marginwidth="”0″"
+        marginheight="0" scrolling="no"></iframe>
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td valign="top"><iframe src="/cgi-bin/luci/xunfeng/lefthtm" width="200" height="500" frameborder="0"
+                        marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+                <td valign="top" width="100%">
+                    <div id="page-content">
+                        <div id="page-content-messages"></div>
+                        <div id="page-content-body">
+                            <div class="page-heading">
+                                <h2>Serial Port Configration</h2>
+                            </div>
+                            <div class="page-htmlcontent">
+                                <div class="tab-content">
+                                    <div class="tab-content-heading">
+                                        <img src="<%=resource%>/xunfeng_resource/image/tabopen.gif" alt="Tab Open">
+                                        <h3 class="tab-selected">Serial Basic Setting</h3>
+                                    </div>
+                                    <form method="POST" action="doSaveUart" name="realportusb_form"
+                                        onsubmit="return doValidate();" class="form-content">
+                                        <table cellspacing="5" cellpadding="0" style="text-align: center;">
+                                            <thead style="border-bottom:1px solid #000000;">
+                                                <tr>
+                                                    <td style="width:120px;">ports</td>
+                                                    <td style="width:100px;">baudrate</td>
+                                                    <td style="width:40px;">Data bit</td>
+                                                    <td style="width:40px;">Parity</td>
+                                                    <td style="width:40px;">Stop bit</td>
+                                                    <td style="width:80px;">flowcontrol</td>
+                                                    <td style="width:80px">Port Mode</td>
+                                                    <td style="width:100px">TCP Row Port</td>
+                                                    <td style="width:100px">TCP Telnet Port</td>
+                                                    <td style="width:100px">TCP SSL Port</td>
+                                                    <td>copy to ...</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="height:2px;background-color:#666666;">
+                                                    <td colspan="11"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Serial Port 1</td>
+                                                    <td>
+                                                        <select id="speed1" name="speed1">
+                                                            <% 
+                                                                speed1 = luci.sys.exec("uci get mss_sysconfig.serialport1.speed") 
+                                                                speed1_230400 = false
+                                                                speed1_115200 = false
+                                                                speed1_57600 = false
+                                                                speed1_38400 = false
+                                                                speed1_19200 = false
+                                                                speed1_9600 = false
+                                                                speed1_4800 = false
+                                                                speed1_2400 = false
+                                                                speed1_1200 = false
+                                                                
+                                                            %>
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit1" name="databit1">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity1" name="parity1">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit1" name="stopbit1">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol1" name="flowcontrol1">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode1" name="portmode1">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4001</td>
+                                                    <td>4101</td>
+                                                    <td>4201</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;1&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 2</td>
+                                                    <td>
+                                                        <select id="speed2" name="speed2">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit2" name="databit2">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity2" name="parity2">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit2" name="stopbit2">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol2" name="flowcontrol2">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode2" name="portmode2">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4002</td>
+                                                    <td>4102</td>
+                                                    <td>4202</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;2&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 3</td>
+                                                    <td>
+                                                        <select id="speed3" name="speed3">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit3" name="databit3">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity3" name="parity3">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit3" name="stopbit3">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol3" name="flowcontrol3">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode3" name="portmode3">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4003</td>
+                                                    <td>4103</td>
+                                                    <td>4203</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;3&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 4</td>
+                                                    <td>
+                                                        <select id="speed4" name="speed4">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit4" name="databit4">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity4" name="parity4">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit4" name="stopbit4">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol4" name="flowcontrol4">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode4" name="portmode4">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4004</td>
+                                                    <td>4104</td>
+                                                    <td>4204</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;4&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 5</td>
+                                                    <td>
+                                                        <select id="speed5" name="speed5">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit5" name="databit5">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity5" name="parity5">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit5" name="stopbit5">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol5" name="flowcontrol5">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode5" name="portmode5">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4005</td>
+                                                    <td>4105</td>
+                                                    <td>4205</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;5&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 6</td>
+                                                    <td>
+                                                        <select id="speed6" name="speed6">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit6" name="databit6">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity6" name="parity6">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit6" name="stopbit6">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol6" name="flowcontrol6">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode6" name="portmode6">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4006</td>
+                                                    <td>4106</td>
+                                                    <td>4206</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;6&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 7</td>
+                                                    <td>
+                                                        <select id="speed7" name="speed7">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit7" name="databit7">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity7" name="parity7">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit7" name="stopbit7">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol7" name="flowcontrol7">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode7" name="portmode7">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4007</td>
+                                                    <td>4107</td>
+                                                    <td>4207</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;7&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 8</td>
+                                                    <td>
+                                                        <select id="speed8" name="speed8">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit8" name="databit8">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity8" name="parity8">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit8" name="stopbit8">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol8" name="flowcontrol8">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode8" name="portmode8">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4008</td>
+                                                    <td>4108</td>
+                                                    <td>4208</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;8&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 9</td>
+                                                    <td>
+                                                        <select id="speed9" name="speed9">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit9" name="databit9">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity9" name="parity9">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit9" name="stopbit9">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol9" name="flowcontrol9">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode9" name="portmode9">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4009</td>
+                                                    <td>4109</td>
+                                                    <td>4209</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;9&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 10</td>
+                                                    <td>
+                                                        <select id="speed10" name="speed10">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit10" name="databit10">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity10" name="parity10">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit10" name="stopbit10">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol10" name="flowcontrol10">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode10" name="portmode10">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4010</td>
+                                                    <td>4110</td>
+                                                    <td>4210</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;10&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 11</td>
+                                                    <td>
+                                                        <select id="speed11" name="speed11">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit11" name="databit11">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity11" name="parity11">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit11" name="stopbit11">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol11" name="flowcontrol11">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode11" name="portmode11">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4011</td>
+                                                    <td>4111</td>
+                                                    <td>4211</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;11&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 12</td>
+                                                    <td>
+                                                        <select id="speed12" name="speed12">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200" selected="">19200
+                                                            </option>
+                                                            <option label="9600" value="9600">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit12" name="databit12">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity12" name="parity12">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit12" name="stopbit12">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol12" name="flowcontrol12">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode12" name="portmode12">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4012</td>
+                                                    <td>4112</td>
+                                                    <td>4212</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;12&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 13</td>
+                                                    <td>
+                                                        <select id="speed13" name="speed13">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit13" name="databit13">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity13" name="parity13">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit13" name="stopbit13">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol13" name="flowcontrol13">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode13" name="portmode13">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4013</td>
+                                                    <td>4113</td>
+                                                    <td>4213</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;13&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 14</td>
+                                                    <td>
+                                                        <select id="speed14" name="speed14">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit14" name="databit14">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity14" name="parity14">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit14" name="stopbit14">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol14" name="flowcontrol14">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode14" name="portmode14">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4014</td>
+                                                    <td>4114</td>
+                                                    <td>4214</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;14&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 15</td>
+                                                    <td>
+                                                        <select id="speed15" name="speed15">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit15" name="databit15">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity15" name="parity15">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit15" name="stopbit15">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol15" name="flowcontrol15">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode15" name="portmode15">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4015</td>
+                                                    <td>4115</td>
+                                                    <td>4215</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;15&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>Serial Port 16</td>
+                                                    <td>
+                                                        <select id="speed16" name="speed16">
+                                                            <option label="230400" value="230400">230400</option>
+                                                            <option label="115200" value="115200">115200</option>
+                                                            <option label="57600" value="57600">57600</option>
+                                                            <option label="38400" value="38400">38400</option>
+                                                            <option label="19200" value="19200">19200</option>
+                                                            <option label="9600" value="9600" selected="">9600</option>
+                                                            <option label="4800" value="4800">4800</option>
+                                                            <option label="2400" value="2400">2400</option>
+                                                            <option label="1200" value="1200">1200</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="databit16" name="databit16">
+                                                            <option label="8" value="8" selected="">8</option>
+                                                            <option label="7" value="7">7</option>
+                                                            <option label="6" value="6">6</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="parity16" name="parity16">
+                                                            <option label="N" value="N" selected="">N</option>
+                                                            <option label="E" value="E">E</option>
+                                                            <option label="O" value="O">O</option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td>
+                                                        <select id="stopbit16" name="stopbit16">
+                                                            <option label="1" value="1" selected="">1</option>
+                                                            <option label="2" value="2">2</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="flowcontrol16" name="flowcontrol16">
+                                                            <option label="NONE" value="NONE" selected="">NONE</option>
+                                                            <option label="SOFT" value="SOFT">SOFT</option>
+                                                            <option label="HARD" value="HARD">HARD</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="portmode16" name="portmode16">
+                                                            <option label="RS232" value="RS232" selected="">RS232
+                                                            </option>
+                                                            <option label="RS485" value="RS485">RS485</option>
+                                                            <option label="RS422" value="RS422">RS422</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>4016</td>
+                                                    <td>4116</td>
+                                                    <td>4216</td>
+                                                    <td><span style="color:#0099ff;cursor:pointer;"
+                                                            onclick="copyto(&#39;16&#39;,&#39;16&#39;);">Copy To</span>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+                                        <p>
+                                            <i>* Changes will take effect after reboot.</i>
+                                        </p>
+                                        <div class="form-buttons">
+                                            <div class="standard">
+                                                <input type="SUBMIT" name="Submit" value="Apply">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-content-heading">
+                                        <img src="<%=resource%>/xunfeng_resource/image/tabclose.gif" alt="Tab Close">
+                                        <h3>
+                                            <a target="_parent"> Serial Security Setting</a>
+                                        </h3>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <iframe src="/cgi-bin/luci/xunfeng/bottomhtm" width="100%" height="40" frameborder="0" marginwidth="”0″"
+        marginheight="0" scrolling="no"></iframe>
+
+
+</body>
+
+</html>

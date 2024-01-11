@@ -1,0 +1,6 @@
+在/etc/config/下创建空白文件mss_sysconfig，用于存储Web端部分配置
+在/etc/config/下批量创建空白文件serial_port_para_X，X为0-15，用于存储串口参数
+
+初始密码应该是空的
+用户名是root
+

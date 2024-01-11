@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>
+        MSS 16  Configuration and Management
+    </title>
+    <link rel="stylesheet" type="text/css" href="<%=media%>/xunfeng_base_files/stylesheet.css">
+    <script language="javascript" type="text/javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+
+    <script language="javascript" type="text/javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+
+    <script language="javascript" type="text/javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        // <!--
+        function initPage() {
+// Set Protocol
+            var protocol = document.login_form.protocol;
+            protocol.value = location.protocol;
+            if (protocol.value.charAt(protocol.value.length - 1) === ':')
+                protocol.value = protocol.value.substring(0, protocol.value.length - 1);
+// Set Focus
+            if (document.login_form.username.length > 0)
+                document.login_form.password.focus();
+            else document.login_form.username.focus();
+        }
+        var err = new ErrorHandler();
+        function doValidate() {
+            err.clearErrors(); // reset
+// Get Fields
+            var username = document.login_form.username;
+            var password = document.login_form.password;
+// Trim Fields
+            username.value = trim(username.value);
+            password.value = trim(password.value);
+// Verify Fields
+            if (isEmptyString(username.value) || (username.value.length < 3) || (username.value.length > 15))
+                err.addError(username, "Invalid or missing Username");
+            if (password.value.length > 15)
+                err.addError(password, "Invalid or missing Password");
+            err.showError();
+            return !err.hasError();
+        }
+        // -->
+    </script>
+
+    <meta name="GENERATOR" content="MSHTML 9.00.8112.16484"></head>
+<body onload="initPage();" onunload="">
+<div id="page-header">
+    <div id="page-header-logo"><a href="http://frontier.js.sgcc.com.cn/" target="_blank"><img src="<%=resource%>/xunfeng_resource/image/xunfeng_logo.jpg" alt="logo" style="position:relative;left:0px;top:0px;"></a></div>
+    <div id="page-header-title">
+        <h1>MSS 16  Configuration and Management</h1></div></div>
+<div id="page-header-separator"></div>
+<table width="100%">
+    <tbody>
+    <tr>
+        <td width="100%">
+            <div id="page-status-content">
+                <div id="page-content-messages">
+                </div>
+                <div id="page-content-body">
+                    <div class="page-heading">
+                        <h2>Login</h2></div>
+                    <div class="page-htmlcontent">
+                        <form class="form-content" onsubmit="return doValidate();" method="POST" name="login_form"><input name="cache" type="HIDDEN"><input name="protocol" type="HIDDEN" value="http">
+                            <table cellspacing="5" cellpadding="0">
+                                <tbody>
+                                <tr>
+                                    <td style="width: 50%;" valign="top">
+                                        <p>Welcome to the Configuration and Management interface of the MSS 16 .</p>
+                                        <p>Please specify the username and password to login to the web
+                                            interface.</p>
+                                        <p>See the User Guide and documentation for more information.</p></td>
+                                    <td style="padding-right: 20px; border-right-color: rgb(0, 0, 139); border-right-width: 1px; border-right-style: solid;">&nbsp;</td>
+                                    <td style="padding-left: 15px;">&nbsp;</td>
+                                    <td style="width: 50%;" valign="top">
+                                        <table cellspacing="5" cellpadding="0">
+                                            <tbody>
+                                            <tr>
+                                                <td class="field-label">Username:</td>
+                                                <td class="field-spacing">&nbsp;</td>
+                                                <td class="field-input">
+                                                    <input name="luci_username" maxlength="15" style="width:120px" size="15" type="TEXT">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="field-label">Password:</td>
+                                                <td class="field-spacing">&nbsp;</td>
+                                                <td class="field-input">
+                                                    <input name="luci_password" maxlength="15" style="width:120px" size="15" type="PASSWORD">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="form-buttons">
+                                            <input name="btLogin" value="Login" type="SUBMIT">
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="page-footer-separator"></div>
+<div id="page-footer-copyright">Copyright © 1996-2012 JIANGSU FRONTIER ELECTRIC TECHNOLOGY Co.LTD. All rights reserved.<br><a href="http://frontier.js.sgcc.com.cn/" target="_blank">http://frontier.js.sgcc.com.cn/</a>
+</div>
+
+
+</body></html>

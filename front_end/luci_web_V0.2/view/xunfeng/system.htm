@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>RFS Terminal Server 16  Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+<script type="text/javascript" language="javascript">
+var index = 0;
+function initPage() {
+}
+var err = new ErrorHandler();
+function doValidate() {
+err.clearErrors(); // reset
+// Verify Device ID
+var device_id = document.system_form.device_id;
+device_id.value = trim(device_id.value);
+if (device_id.value.length == 0)
+err.addError(device_id, "Invalid or Missing Device ID");
+else if (device_id.value.search(/^[A-Fa-f0-9:;._ -]+$/) == -1)
+err.addError(device_id, "Invalid Device ID (must use hexadecimal characters)");
+else {
+// Remove Punctuation
+var new_device_id = device_id.value.replace(/[:;._ -]/g, "");
+if (new_device_id.length != 32)
+err.addError(device_id, "Invalid Device ID (must be 32 (128-bit) characters)");
+}
+err.showError();
+return !err.hasError();
+}
+// -->
+</script>
+
+</head>
+
+<body onload="" onunload="" id="mainbody">
+	<iframe src="<%=url('xunfeng', 'tophtm')%>" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="<%=url('xunfeng', 'lefthtm')%>" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>System Configuration</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabopen.gif" alt="Tab Open">
+										<h3 class="tab-selected">Device Identity Settings</h3>
+									</div>
+									<div class="tab-content-body">
+										<form method="POST" action="doConfigSys" name="system_form" onsubmit="return doValidate();" class="form-content">
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td class="field-label">Description:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="TEXT" name="description" size="48" maxlength="64" value="<%=luci.sys.exec("uci get mss_sysconfig.summary.description")%>"></td>
+													</tr>
+													<tr>
+														<td class="field-label">Contact:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="TEXT" name="contact" size="48" maxlength="64" value="<%=luci.sys.exec("uci get mss_sysconfig.summary.contact")%>"></td>
+													</tr>
+													<tr>
+														<td class="field-label">Location:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="TEXT" name="location" size="48" maxlength="64" value="<%=luci.sys.exec("uci get mss_sysconfig.summary.location")%>"></td>
+													</tr>
+													<tr>
+														<td colspan="3">&nbsp;</td>
+													</tr>
+													<tr>
+														<td colspan="3">&nbsp;</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="form-buttons">
+												<div class="standard">
+													<input type="SUBMIT" name="Submit" value="Apply">
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="<%=url('xunfeng', 'bottomhtm')%>" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>

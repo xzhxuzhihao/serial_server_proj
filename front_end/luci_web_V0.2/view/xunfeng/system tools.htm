@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>RFS Terminal Server 16  Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+
+<script type="text/javascript">
+var xmlhttp;
+var isping=0;
+function getXMLHttpRequest(){ 
+  if(window.XMLHttpRequest){ 
+    return new XMLHttpRequest(); 
+  }else{ 
+    var names=["msxml.XMLHTTP","msxml2.XMLHTTP","msxml3.XMLHTTP","Microsoft.XMLHTTP","Msxml2.XMLHTTP.5.0","Msxml2.XMLHTTP.4.0","Msxml2.XMLHTTP.3.0"]; 
+    for(var i=0;i<names.length;i++){ 
+      try{ 
+        var name=names[i]; 
+        return new ActiveXObject(name); 
+      }catch(e){ 
+      } 
+    } 
+  } 
+  return null; 
+} 
+function getpingresult(){
+	xmlhttp=getXMLHttpRequest();
+	if (xmlhttp!=null)
+  	{
+  		xmlhttp.onreadystatechange=state_Change;
+  		xmlhttp.open("POST","doPing",true);
+		xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");		
+		xmlhttp.send("host="+document.getElementById('ipaddress').value);
+  		//xmlhttp.send(null);
+  	}
+	else
+  	{
+  		alert("Your browser does not support XMLHTTP.");
+  	}
+	if(isping===1)setTimeout("getpingresult()", 1000);
+}
+function iGetInnerText(testStr) {
+        var resultStr = testStr.replace(/\ +/g, ""); //去掉空格
+        resultStr = testStr.replace(/[ ]/g, "");    //去掉空格
+        resultStr = testStr.replace(/[\r\n]/g, ""); //去掉回车换行
+        return "\r\n"+resultStr+"\r\n";
+  }
+function loadXMLDoc()
+{
+	if(document.getElementById('btPing').value==="Ping")
+	{
+		isping=1;
+		document.getElementById('btPing').value="Stop Ping";
+		setTimeout("getpingresult()", 1000);
+	}
+	else{
+		isping=0;
+		document.getElementById('btPing').value="Ping";
+	}
+}
+
+function state_Change()
+{
+if (xmlhttp.readyState===4)
+  {// 4 = "loaded"
+  if (xmlhttp.status===200)
+    {// 200 = "OK"
+    	// alert(xmlhttp.responseText);
+    	document.getElementById('pingtext').innerHTML+="\r\n"+xmlhttp.responseText;
+    	document.getElementById('pingtext').scrollTop = document.getElementById('pingtext').scrollHeight;
+    }
+  else
+    {
+        document.getElementById('pingtext').innerHTML+="\r\n"+xmlhttp.responseText;
+    	document.getElementById('pingtext').scrollTop = document.getElementById('pingtext').scrollHeight;
+    	//document.getElementById('pingtext').innerText+="\r\nProblem retrieving XML data:" + xmlhttp.statusText;
+    }
+  }
+}
+</script>
+
+
+<style>
+textarea
+{
+width:99%;
+height:200pt;
+}
+</style>
+
+</head>
+<body onload="" onunload="" id="mainbody">
+	<iframe src="/cgi-bin/luci/xunfeng/tophtm" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="/cgi-bin/luci/xunfeng/lefthtm" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>System Tools</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabopen.gif" alt="Tab Open">
+										<h3 class="tab-selected">Ping</h3>
+									</div>
+									<div class="tab-content-body">
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td class="field-label" align="center" valign="center">
+															<textarea readonly="" height="200" id="pingtext" name="pingtext"></textarea>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="form-buttons">
+												<div class="standard-custom">
+													Ping Host:&nbsp;&nbsp;<input type="TEXT" name="ipaddress" id="ipaddress" value="www.remoteusb.com">
+													&nbsp;&nbsp;<input type="BUTTON" name="btPing" id="btPing" value="Ping" onclick="loadXMLDoc()">
+												</div>
+											</div>
+									</div>
+								</div>
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabclose.gif" alt="Tab Close">
+										<h3>
+											<a target="_parent"> Traceroute</a>
+										</h3>
+									</div>
+								</div>
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabclose.gif" alt="Tab Close">
+										<h3>
+											<a target="_parent"> Date</a>
+										</h3>
+									</div>
+								</div>
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabclose.gif" alt="Tab Close">
+										<h3>
+											<a target="_parent"> StaticRoute</a>
+										</h3>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="/cgi-bin/luci/xunfeng/bottomhtm" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>

@@ -1,0 +1,192 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BAUD_RATE_115200	serial_transfer_api.h	58;"	d
+BAUD_RATE_1200	serial_transfer_api.h	51;"	d
+BAUD_RATE_19200	serial_transfer_api.h	55;"	d
+BAUD_RATE_230400	serial_transfer_api.h	59;"	d
+BAUD_RATE_2400	serial_transfer_api.h	52;"	d
+BAUD_RATE_38400	serial_transfer_api.h	56;"	d
+BAUD_RATE_4800	serial_transfer_api.h	53;"	d
+BAUD_RATE_57600	serial_transfer_api.h	57;"	d
+BAUD_RATE_921600	serial_transfer_api.h	60;"	d
+BAUD_RATE_9600	serial_transfer_api.h	54;"	d
+BUFFER_NUM_REC	serial_transfer_api.h	22;"	d
+BUFFER_NUM_SED	serial_transfer_api.h	23;"	d
+BUF_LEN_FILENAME	serial_transfer_api.h	39;"	d
+BUF_LEN_READ	serial_transfer_api.h	40;"	d
+CASCADE_MODE	serial_transfer_api.h	50;"	d
+COMMUNICATE_SERIAL_NAME	serial_transfer_api.h	28;"	d
+CONNECT_ERROR_JUDGE_NEGATIVE	error.h	32;"	d
+CONNECT_ERROR_JUDGE_NULL	error.h	28;"	d
+DEFINE_LOCK	serial_transfer_api.h	145;"	d
+DELAY_TIME	serial_transfer_api.h	47;"	d
+DEVICE_MODE_FILE	serial_transfer_api.h	26;"	d
+EVENT_SIZE	serial_transfer_api.h	38;"	d
+EXIT_SS	error.h	1;"	d
+EXIT_SS_RETURN_NEGATIVE	error.h	4;"	d
+EXIT_SS_RETURN_NULL	error.h	2;"	d
+FLOW_MODE_HARD	serial_transfer_api.h	63;"	d
+FLOW_MODE_NONE	serial_transfer_api.h	61;"	d
+FLOW_MODE_SOFT	serial_transfer_api.h	62;"	d
+GET_IP_COMMAND	serial_transfer_api.h	33;"	d
+GET_SERIAL_NUM_CHAR	serial_transfer_api.h	85;"	d
+IP_ADDR_CHAR_LENTH	serial_transfer_api.h	70;"	d
+IP_COMMAND_SIZE	serial_transfer_api.h	67;"	d
+IP_FAMIALY	serial_transfer_api.h	20;"	d
+JUDGE_ERROR	error.h	6;"	d
+JUDGE_ERROR_NULL_RETURN_NULL	error.h	17;"	d
+JUDGE_ERROR_PTHREAD_ERROR	error.h	21;"	d
+JUDGE_ERROR_PTHREAD_ERROR_RETURN	error.h	24;"	d
+JUDGE_ERROR_RETURN	error.h	9;"	d
+JUDGE_ERROR_RETURN_NULL	error.h	13;"	d
+JUDGE_THE_INIT_PRO	serial_transfer_api.h	90;"	d
+LAN_TO_WAN_COMMAND	serial_transfer_api.h	35;"	d
+LOCK_SOCKET_THREAD_CREATE	serial_transfer_api.h	127;"	d
+MESSAGE_0	serial_transfer_api.h	31;"	d
+MESSAGE_1	serial_transfer_api.h	32;"	d
+MESSAGE_COMMUNICATE	serial_transfer_api.h	73;"	d
+MESSAGE_NUM	serial_transfer_api.h	21;"	d
+NETWORK_FILE_NAME	serial_transfer_api.h	29;"	d
+NET_PORT_BASE	serial_transfer_api.h	17;"	d
+NORMAL_MODE	serial_transfer_api.h	49;"	d
+PRINTF_CONNECT_INFO	serial_transfer_api.h	198;"	d
+PRINTF_IP_ADDRESS	serial_transfer_api.h	102;"	d
+PRINTF_SERIAL_COLSED	serial_transfer_api.h	124;"	d
+PRINTF_SERIAL_PARA	serial_transfer_api.h	112;"	d
+PRINTF_SERIAL_STANDARD	serial_transfer_api.h	115;"	d
+SAVE_MODE_CASCADE_COMMAND	serial_transfer_api.h	37;"	d
+SAVE_MODE_NORMAL_COMMAND	serial_transfer_api.h	36;"	d
+SAVE_MODE_PARA_SIZE	serial_transfer_api.h	69;"	d
+SEND_MESSAGE_CLIENT	serial_transfer_api.h	78;"	d
+SERIAL_DEVICE_NAME	serial_transfer_api.h	27;"	d
+SERIAL_DIRECTION	serial_transfer_api.h	25;"	d
+SERIAL_FILE_BUF_LENTH	serial_transfer_api.h	71;"	d
+SERIAL_MODE_RS232	serial_transfer_api.h	64;"	d
+SERIAL_MODE_RS422	serial_transfer_api.h	65;"	d
+SERIAL_MODE_RS485	serial_transfer_api.h	66;"	d
+SERIAL_PARA_QUOTA	serial_transfer_api.h	48;"	d
+SERIAL_PARA_SIZE	serial_transfer_api.h	24;"	d
+SIG_DOWN_KEY	serial_transfer_api.h	45;"	d
+SIG_IP_FRAME	serial_transfer_api.h	41;"	d
+SIG_PARA_CASCADE_FRAME	serial_transfer_api.h	43;"	d
+SIG_PARA_NORMAL_FRAME	serial_transfer_api.h	42;"	d
+SIG_RESET	serial_transfer_api.h	46;"	d
+SIG_UP_KEY	serial_transfer_api.h	44;"	d
+TCP_UDP	serial_transfer_api.h	19;"	d
+THE_MAX_CONNECT_AT_SAME	serial_transfer_api.h	18;"	d
+WAN_LAN_COMMAND_SIZE	serial_transfer_api.h	68;"	d
+WAN_TO_LAN_COMMAND	serial_transfer_api.h	34;"	d
+WATCH_SERIAL_NAME	serial_transfer_api.h	30;"	d
+a	test_config_serial_2.c	/^int a = 0;$/;"	v
+aa_b	test_config_serial.c	/^int aa_b = 19999;$/;"	v
+aa_b	test_config_serial.c	/^struct aa_b{$/;"	s	file:
+aa_c	test_config_serial.c	/^int aa_c = 3;$/;"	v
+abuu	test_config_tmp.c	/^int abuu = 188;$/;"	v
+aff	test_config_tmp.c	/^int aff(){$/;"	f
+al	test_config_serial.c	/^	int al;$/;"	m	struct:aa_b	file:
+baud_rate	serial_transfer_api.h	/^	int baud_rate;$/;"	m	struct:serial_port_info
+baud_rate_value	serial_transfer_api.h	/^	int baud_rate_value;$/;"	m	struct:wait_time
+char_to_dec	serial_transfer_api.c	/^int char_to_dec(char *char_array, int num){$/;"	f
+check_string_end	serial_transfer_api.c	/^unsigned char check_string_end(char *check_str, unsigned char char_num){$/;"	f
+client_fd	serial_transfer_api.h	/^	int *client_fd;$/;"	m	struct:serial_transfer
+client_fd	serial_transfer_api.h	/^	int client_fd;$/;"	m	struct:occupy_signal_send
+close_signal	serial_transfer_api.h	/^	int *close_signal;$/;"	m	struct:serial_thread_signal
+close_signal	serial_transfer_api.h	/^	int close_signal;$/;"	m	struct:fd_serial_client
+communicate_client	serial_transfer_api.c	/^char *communicate_client(int *client_fd){$/;"	f
+communicate_ip_addr_send	serial_config_api.c	/^void* communicate_ip_addr_send(void *arg){$/;"	f
+communicate_read_data	serial_config_api.c	/^void* communicate_read_data(void *arg){$/;"	f
+communicate_read_ipaddr	serial_config_api.c	/^unsigned char* communicate_read_ipaddr(){$/;"	f
+communicate_send_is_success	serial_config_api.c	/^int communicate_send_is_success(struct time_signal* signal, unsigned char signal_buffer){$/;"	f
+communicate_send_seiral_standard	serial_config_api.c	/^void *communicate_send_seiral_standard(void *arg){$/;"	f
+communicate_share_room	serial_config_api.c	/^struct share_room communicate_share_room = {0, 1};  \/\/1 for having read$/;"	v	typeref:struct:share_room
+communicate_signal	serial_config_api.c	/^int communicate_signal = 0;$/;"	v
+communicate_signal	test_config_serial.c	/^int communicate_signal = 0;$/;"	v
+cond	serial_config_api.c	/^pthread_cond_t cond;$/;"	v
+cond	test_config_serial.c	/^pthread_cond_t cond;$/;"	v
+cond_main	main.c	/^pthread_cond_t cond_main;$/;"	v
+data_bit	serial_transfer_api.h	/^	int data_bit;$/;"	m	struct:wait_time
+device_mode	serial_config_api.c	/^int device_mode = 0; \/\/ 0 for normal; 1 for connection$/;"	v
+device_name	serial_transfer_api.h	/^	char device_name[14];$/;"	m	struct:serial_port_info
+do_work	test_config_serial.c	/^void * do_work(void *arg){$/;"	f
+f_client_fd	serial_transfer_api.h	/^	int f_client_fd;$/;"	m	struct:fd_serial_client
+f_serial_fd	serial_transfer_api.h	/^	int f_serial_fd;$/;"	m	struct:fd_serial_client
+fd	serial_transfer_api.h	/^	int fd;   \/\/description id$/;"	m	struct:serial_port_info
+fd	serial_transfer_api.h	/^	int fd;$/;"	m	struct:time_signal
+fd_serial_client	serial_transfer_api.h	/^struct fd_serial_client {$/;"	s
+fd_serial_client	serial_transfer_api.h	/^typedef struct fd_serial_client fd_serial_client;$/;"	t	typeref:struct:fd_serial_client
+fd_w	serial_transfer_api.h	/^	int fd_w;   \/\/watch description id$/;"	m	struct:serial_port_info
+gdb_a	test_config_serial.c	/^int gdb_a = 1;$/;"	v
+gdb_b	test_config_serial.c	/^int gdb_b = 2;$/;"	v
+get_device_mode	serial_config_api.c	/^int get_device_mode(){$/;"	f
+handle_connection	serial_transfer_api.c	/^void *handle_connection(void* arg) {$/;"	f
+is_read	serial_transfer_api.h	/^	bool is_read;$/;"	m	struct:share_room
+left_key_process_func	serial_config_api.c	/^void* left_key_process_func(void* arg){$/;"	f
+lock	test_config_serial.c	/^pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_a	test_config_serial.c	/^pthread_mutex_t lock_a;$/;"	v
+lock_b	test_config_serial.c	/^pthread_mutex_t lock_b;$/;"	v
+lock_communicate_share_room	serial_config_api.c	/^pthread_mutex_t lock_communicate_share_room = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_communicate_signal	serial_config_api.c	/^pthread_mutex_t lock_communicate_signal = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_communicate_signal_data	serial_config_api.c	/^pthread_mutex_t lock_communicate_signal_data = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_connection	serial_config_api.c	/^pthread_mutex_t lock_connection = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_ip_address	serial_config_api.c	/^pthread_mutex_t lock_ip_address = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_serial	serial_config_api.c	/^pthread_mutex_t lock_serial = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_tmp	serial_config_api.c	/^pthread_mutex_t lock_tmp = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+lock_tmp	test_config_serial.c	/^pthread_mutex_t lock_tmp = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+main	main.c	/^int main(){$/;"	f
+main	test_config_serial.c	/^int main() {$/;"	f
+main	test_config_serial_1.c	/^int main() {$/;"	f
+main	test_config_serial_2.c	/^int main(){$/;"	f
+num	serial_transfer_api.h	/^	int num;$/;"	m	struct:time_signal
+occupy_signal_send	serial_transfer_api.h	/^struct occupy_signal_send{$/;"	s
+occupy_signal_send	serial_transfer_api.h	/^typedef struct occupy_signal_send occupy_signal_send;$/;"	t	typeref:struct:occupy_signal_send
+parity_bit	serial_transfer_api.h	/^	unsigned char parity_bit; \/\/0 for none, 1 for odd, 2 for enen$/;"	m	struct:serial_port_info
+pre_serial_standard	serial_config_api.c	/^char pre_serial_standard[32];$/;"	v
+read_data	serial_transfer_api.h	/^	unsigned char read_data;$/;"	m	struct:share_room
+read_data_from_serial	serial_transfer_api.c	/^void* read_data_from_serial(void *s_c_fd){$/;"	f
+resend_time_func	serial_config_api.c	/^void* resend_time_func(void *arg){$/;"	f
+right_key_process_func	serial_config_api.c	/^void* right_key_process_func(void* arg){$/;"	f
+send_communicate_signal_func	serial_config_api.c	/^void *send_communicate_signal_func(void *arg){$/;"	f
+send_signal	serial_config_api.c	/^int send_signal = 1;$/;"	v
+send_signal_func	serial_config_api.c	/^void *send_signal_func(void *arg){$/;"	f
+seqence	serial_transfer_api.h	/^	int seqence;$/;"	m	struct:serial_port_info
+serial_config	serial_transfer_api.h	/^struct serial_config{$/;"	s
+serial_config	serial_transfer_api.h	/^typedef struct serial_config serial_config;$/;"	t	typeref:struct:serial_config
+serial_config_api	serial_config_api.c	/^void* serial_config_api(void* arg){$/;"	f
+serial_para_proc	serial_config_api.c	/^void serial_para_proc(serial_port_info *arg_serial, char *buffer, struct termios *tty){$/;"	f
+serial_port	serial_transfer_api.h	/^	int serial_port;$/;"	m	struct:serial_transfer
+serial_port	serial_transfer_api.h	/^	serial_port_info serial_port[16];$/;"	m	struct:serial_config
+serial_port_info	serial_transfer_api.h	/^struct serial_port_info{$/;"	s
+serial_port_info	serial_transfer_api.h	/^typedef struct serial_port_info serial_port_info;$/;"	t	typeref:struct:serial_port_info
+serial_standard	serial_transfer_api.h	/^	char *serial_standard; \/\/port_type parameter$/;"	m	struct:serial_port_info
+serial_standard	serial_transfer_api.h	/^	unsigned char *serial_standard;$/;"	m	struct:time_signal
+serial_thread_close	serial_transfer_api.c	/^void *serial_thread_close(void *arg){$/;"	f
+serial_thread_signal	serial_transfer_api.h	/^struct serial_thread_signal{$/;"	s
+serial_thread_signal	serial_transfer_api.h	/^typedef struct serial_thread_signal serial_thread_signal;$/;"	t	typeref:struct:serial_thread_signal
+serial_transfer	serial_transfer_api.h	/^struct serial_transfer{$/;"	s
+serial_transfer	serial_transfer_api.h	/^typedef struct serial_transfer serial_transfer;$/;"	t	typeref:struct:serial_transfer
+share_room	serial_transfer_api.h	/^struct share_room{$/;"	s
+signal	serial_transfer_api.h	/^	bool signal;$/;"	m	struct:occupy_signal_send
+socket_16_listen_func	main.c	/^void *socket_16_listen_func(void *arg){$/;"	f
+stop_bit	serial_transfer_api.h	/^	unsigned char stop_bit;  \/\/1 for 1 bit, 2 for 2 bit$/;"	m	struct:serial_port_info
+str_to_num	serial_config_api.c	/^unsigned char *str_to_num(char *serial_standard){$/;"	f
+str_to_num_ipaddr	serial_config_api.c	/^unsigned char* str_to_num_ipaddr(char *ipaddr_char){$/;"	f
+the_end	serial_transfer_api.h	/^	bool the_end;$/;"	m	struct:time_signal
+thread	serial_transfer_api.h	/^	pthread_t *thread;$/;"	m	struct:serial_thread_signal
+thread_func	serial_config_api.c	/^void *thread_func(void *arg){$/;"	f
+thread_func	test_config_serial.c	/^void* thread_func(void *arg) {$/;"	f
+thread_function	test_config_serial.c	/^void *thread_function(void *arg){$/;"	f
+thread_function_0	test_gdb.c	/^void *thread_function_0(void *arg){$/;"	f
+time_signal	serial_transfer_api.h	/^struct time_signal{$/;"	s
+transfer_wait_time	serial_config_api.c	/^wait_time transfer_wait_time;$/;"	v
+up_power	serial_transfer_api.h	/^	bool up_power; \/\/ Upper power status$/;"	m	struct:serial_port_info
+wait_bit_per	serial_transfer_api.h	/^	int wait_bit_per;$/;"	m	struct:wait_time
+wait_time	serial_transfer_api.h	/^struct wait_time{$/;"	s
+wait_time	serial_transfer_api.h	/^typedef struct wait_time wait_time;$/;"	t	typeref:struct:wait_time
+watch_serial_name	serial_transfer_api.h	/^	char watch_serial_name[50];$/;"	m	struct:serial_port_info
+wd	serial_transfer_api.h	/^	int wd;		\/\/add watch id$/;"	m	struct:serial_port_info
+wf	test_config_serial.c	76;"	d	file:
+write_data_to_serial	serial_transfer_api.c	/^void* write_data_to_serial(int *client_fd, int *serial_fd){$/;"	f

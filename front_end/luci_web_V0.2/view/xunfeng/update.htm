@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>RFS Terminal Server 16  Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+<script type="text/javascript" language="javascript">
+	var index = 0;
+	function initPage() {
+		document.upgrade_form.firmware.focus();
+	}
+	var err = new ErrorHandler();
+	function doValidate() {
+		// Clear All Errors
+		err.clearErrors();
+		var firmware = document.upgrade_form.upfile;
+		if (isEmptyString(firmware.value))
+			err.addError(firmware,
+					'You must select the firmware file to update.');
+		err.showError();
+		if (err.hasError())
+			return !err.hasError();
+		// No Error, so Display Upgrading Message and Disable Submit
+		document.upgrade_form.btUpdate.disabled = true;
+		var update_message = new getObj('update_message_label');
+		update_message.obj.innerHTML = 'Update in progress. Please wait...';
+		return 1;
+	}
+// -->
+</script>
+
+</head>
+<body onload="" onunload="" id="mainbody">
+	<iframe src="/cgi-bin/luci/xunfeng/tophtm" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="/cgi-bin/luci/xunfeng/lefthtm" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>Update Firmware</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<form enctype="multipart/form-data" method="POST" action="doUpdate" name="upgrade_form" onsubmit="return doValidate();" class="form-content">
+									<p>
+										<span style="color: red; font-weight: bold;">Caution: </span>You
+										have asked to update the firmware on your RFS Terminal Server 16  Configuration and Management. When
+										updating the firmware, please check the web site or release
+										notes for more information.
+									</p>
+									<table cellspacing="5" cellpadding="0">
+										<tbody>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td class="field-label">Model:</td>
+												<td class="field-spacing">&nbsp;</td>
+												<td class="field-value">RFS Terminal Server 16  Configuration and Management</td>
+											</tr>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td class="field-label">Firmware:</td>
+												<td class="field-spacing">&nbsp;</td>
+												<td class="field-value" id="buildcopyright">7.5.8 (build 2020-08-28 18:58:03)</td>
+											</tr>
+
+										</tbody>
+									</table>
+									<br>
+									<h3 class="page-separator">Select Firmware</h3>
+									<table cellspacing="5" cellpadding="0">
+										<tbody>
+											<tr>
+												<td class="field-label">Select Firmware:</td>
+												<td class="field-spacing">&nbsp;</td>
+												<td class="field-input">
+													<!-- The following hidden field must be before the file field. -->
+													<input type="HIDDEN" name="storage" value="firmware"><input type="FILE" name="upfile" id="upfile" size="48" maxlength="255">
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="form-buttons">
+										<div class="standard-custom">
+											<input type="SUBMIT" name="btUpdate" value="Update">&nbsp;&nbsp;
+											<span id="update_message_label">&nbsp;</span>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="/cgi-bin/luci/xunfeng/bottomhtm" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>

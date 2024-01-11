@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>RFS Terminal Server 16  Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+<script type="text/javascript" language="javascript">
+	function initPage() {
+		// Set States
+		setAuthenticationState();
+		setPublicKeyState(true);
+		// Set Focus
+		document.root_pwd_form.user_name.focus();
+	}
+	function setAuthenticationState() {
+		var authentication_state = document.root_pwd_form.enable_pwd_authentication;
+		var disabled = (authentication_state.checked ? false : true);
+		document.root_pwd_form.new_password.disabled = disabled;
+		document.root_pwd_form.confirm_password.disabled = disabled;
+	}
+	function setPublicKeyState(init) {
+		var ssh_state = document.root_pwd_form.enable_ssh_authentication;
+		var disabled = (ssh_state.checked ? false : true);
+		document.root_pwd_form.public_key.disabled = disabled;
+		if (init == null)
+			setPublicKeyValue();
+	}
+	function setPublicKeyValue() {
+		var public_key = document.root_pwd_form.public_key;
+		if (document.root_pwd_form.enable_ssh_authentication.checked) {
+			public_key.value = "";
+			public_key.focus();
+		} else {
+			public_key.value = "Type or paste your SSH public key here";
+		}
+	}
+	var err = new ErrorHandler();
+	function doValidate() {
+		err.clearErrors(); // reset
+		var user_name = document.root_pwd_form.user_name;
+		user_name.value = trim(user_name.value);
+		if (isEmptyString(user_name.value))
+			err.addError(user_name, "Invalid or missing User Name");
+		var authentication_state = document.root_pwd_form.enable_pwd_authentication;
+		var new_password = document.root_pwd_form.new_password;
+		var confirm_password = document.root_pwd_form.confirm_password;
+		if (authentication_state.checked) {
+			if (new_password.value.search(/^[*]+$/) == -1
+					|| confirm_password.value.search(/^[*]+$/) == -1) {
+				if (!isValidPassword(new_password.value))
+					err
+							.addError(new_password,
+									"Invalid or missing Password: Must be 1 to 15 characters long");
+				if (new_password.value != confirm_password.value)
+					err
+							.addError(new_password,
+									"Invalid or missing Password: Passwords do not match");
+				if (err.hasError())
+					new_password.value = confirm_password.value = "";
+			}
+		}
+		var ssh_state = document.root_pwd_form.enable_ssh_authentication;
+		var public_key = document.root_pwd_form.public_key;
+		public_key.value = trim(public_key.value);
+		if (ssh_state.checked) {
+			if (isEmptyString(public_key.value))
+				err
+						.addError(public_key,
+								"Invalid or missing Public Key: Invalid RSA public key format");
+			else if (public_key.value.length > 512)
+				err
+						.addError(public_key,
+								"Invalid or missing Public Key: Must not exceed 512 characters");
+		}
+		err.showError();
+		return !err.hasError();
+	}
+// -->
+</script>
+
+</head>
+<body onload="" onunload="" id="mainbody">
+	<iframe src="/cgi-bin/luci/xunfeng/tophtm" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="/cgi-bin/luci/xunfeng/lefthtm" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>Security Configuration</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<div class="tab-content">
+									<div class="tab-content-heading">
+										<img src="<%=resource%>/xunfeng_resource/image/tabopen.gif" alt="Tab Open">
+										<h3 class="tab-selected">Administrator Password</h3>
+									</div>
+									<div class="tab-content-body">
+										<form method="POST" action="doConfigUser" name="root_pwd_form" onsubmit="return doValidate();" class="form-content">
+											<p>
+												Specify the authentication credentials for the Administrator
+												that will be required for logging into the device. After
+												changing the user name or password, you will immediately be
+												asked to log back in to the web interface using the <strong>new</strong>
+												values.
+											</p>
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td class="field-label">User Name:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="TEXT" readonly="" name="user_name" size="18" maxlength="18" value="root"></td>
+													</tr>
+												</tbody>
+											</table>
+											<br>
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td colspan="4" class="field-checkbox"><input type="CHECKBOX" name="enable_pwd_authentication" checked="" onclick="setAuthenticationState();">&nbsp;Enable
+															password authentication</td>
+													</tr>
+													<tr>
+														<td class="field-indent">&nbsp;</td>
+														<td class="field-label">New Password:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="PASSWORD" name="new_password" size="18" maxlength="18" value=""></td>
+													</tr>
+													<tr>
+														<td class="field-indent">&nbsp;</td>
+														<td class="field-label">Confirm Password:</td>
+														<td class="field-spacing">&nbsp;</td>
+														<td class="field-input"><input type="PASSWORD" name="confirm_password" size="18" maxlength="18" value=""></td>
+													</tr>
+												</tbody>
+											</table>
+											<br>
+											<table cellspacing="5" cellpadding="0">
+												<tbody>
+													<tr>
+														<td colspan="2" class="field-checkbox"><input type="CHECKBOX" name="enable_ssh_authentication" onclick="setPublicKeyState();">&nbsp;Enable SSH
+															public key authentication</td>
+													</tr>
+													<tr>
+														<td class="field-indent">&nbsp;</td>
+														<td class="field-input"><textarea name="public_key" rows="5" cols="80" disabled="">  </textarea></td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="form-buttons">
+												<div class="standard">
+													<input type="SUBMIT" name="Submit" value="Apply">
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="/cgi-bin/luci/xunfeng/bottomhtm" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>

@@ -1,0 +1,7 @@
+config interface 'config'
+		option speed '9600'
+		option databit '8'
+		option parity 'N'
+		option stopbit '1'
+		option flowcontrol 'NONE'
+		option portmode 'RS232'

@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Network USB/&lt;%=(String)session.getAttribute("MaxPort")+(String)session.getAttribute("Pro") %&gt; Configuration and Management</title>
+<link href="<%=media%>/xunfeng_base_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/jquery-3.7.0.min.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/utils.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/errhandler.js"></script>
+<script type="text/javascript" language="javascript" src="<%=media%>/xunfeng_base_files/validation.js"></script>
+
+<script type="text/javascript" language="javascript">
+	function initPage() {
+		document.http_copyconfig_form.upload.focus();
+	}
+	function doBackup() {
+		var file = 'doBackup';
+		if (document.http_copyconfig_form.userinfo.checked)
+			file += '?userinfo=1';
+		else
+			file+='?userinfo=0';
+		location = file;
+	}
+	
+	function doValidate() {
+		// NOTE: form submission only happens on restore (not backup).
+		var err = new ErrorHandler();
+		err.clearErrors(); // reset
+		var upload = document.http_copyconfig_form.upload;
+		if (isEmptyString(upload.value)) {
+			err.addError(upload, 'A file is required.');
+		}
+		err.showError();
+		if (err.hasError())
+			return !err.hasError();
+		// No Error, so Display Restore Message and Disable Submit
+		document.http_copyconfig_form.btRestoreConfig.disabled = true;
+		var restore_message = new getObj('restore_message_label');
+		restore_message.obj.innerHTML = 'Restoring configuration. Please wait...';
+		return 1;
+	}
+	$(document).ready(function() {
+		const fileUploader = document.getElementById("fileUpload");
+		fileUploader.addEventListener("change", (event)=>{
+			const files = event.target.files;
+			console.log("files", files)
+		});
+	});
+
+	$("#btRestoreConfig").click(()=>{
+		const files = $("#fileUpload").files;
+		var params = new FormData();
+		params = params.append("upload", files[0])
+		$ajax({
+			type: "POST",
+			url: "/doRestore",
+			data: params,
+			contentType: false,
+			processData: false,
+			success: (res) => {
+				console.log(res)
+			}
+		})
+	});
+
+// -->
+</script>
+
+</head>
+<body id="mainbody">
+	<iframe src="/cgi-bin/luci/xunfeng/tophtm" width="100%" height="82" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+	<table width="100%">
+		<tbody>
+			<tr>
+				<td valign="top"><iframe src="/cgi-bin/luci/xunfeng/lefthtm" width="200" height="500" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe></td>
+				<td valign="top" width="100%">
+					<div id="page-content">
+						<div id="page-content-messages"></div>
+						<div id="page-content-body">
+							<div class="page-heading">
+								<h2>Backup/Restore</h2>
+							</div>
+							<div class="page-htmlcontent">
+								<form enctype="multipart/form-data" method="POST" action="doRestore" name="http_copyconfig_form" onsubmit="return doValidate();" class="form-content">
+									<p>Backup configuration to a file on your PC or server.</p>
+									<table cellspacing="5" cellpadding="0">
+										<tbody>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td class="field-checkbox" colspan="3"><input type="checkbox" name="userinfo" id="userinfo"> &nbsp;Include
+													Network of Wifi authentication.</td>
+											</tr>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+											</tr>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td><input type="BUTTON" name="backup" value="Backup" onclick="doBackup();"></td>
+												<td class="field-spacing">&nbsp;</td>
+												<td width="100%">You will be prompted for where to save
+													the backup file.</td>
+											</tr>
+										</tbody>
+									</table>
+									<p>
+										Restore configuration from a file on your PC or server. <br>
+										<br>
+										<span style="color: red; font-weight: bold;">Note: </span>If
+										the restored configuration modifies the network settings, your
+										RFS Terminal Server 16  Configuration and Management will dynamically switch to the new
+										settings. You will need to manually redirect your browser to
+										the new IP address.
+									</p>
+									<table cellspacing="5" cellpadding="0">
+										<tbody>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td align="left">Restore From File:</td>
+												<td class="field-spacing">&nbsp;</td>
+												<td><input type="HIDDEN" name="restore" value="restore"><input type="FILE" name="upload" id="fileUpload" accept=".bak" size="30" maxlength="30"></td>
+											</tr>
+											<tr>
+												<td class="field-indent">&nbsp;</td>
+												<td colspan="3" nowrap=""><input type="BUTTON" name="btRestoreConfig" id="btRestoreConfig" value="Restore">&nbsp;&nbsp;
+													<span id="restore_message_label">&nbsp;</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</form>
+							</div>
+						</div>
+					</div>
+
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<iframe src="/cgi-bin/luci/xunfeng/bottomhtm" width="100%" height="40" frameborder="0" marginwidth="”0″" marginheight="0" scrolling="no"></iframe>
+
+
+</body></html>
